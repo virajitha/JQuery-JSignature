@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, target-densitydpi=device-dpi" /><!-- this is for mobile (Android) Chrome -->
+		<meta name="viewport" content="initial-scale=1.0, width=device-height"><!--  mobile Safari, FireFox, Opera Mobile  -->
+		<script src="libs/modernizr.js"></script>
+		<style type="text/css">
+			div {
+				margin-top:1em;
+				margin-bottom:1em;
+			}
+			input {
+				padding: .5em;
+				margin: .5em;
+			}			
+			#signatureparent {
+				color:darkblue;
+				background-color:darkgrey;
+				max-width:600px;
+				padding:20px;
+			}
+			
+			/*This is the div within which the signature canvas is fitted*/
+			#signature {
+				border: 2px dotted black;
+				background-color:lightgrey;
+			}	 
+
+			/* Drawing the 'gripper' for touch-enabled devices */ 
+			html.touch #content {
+				float:left;
+				width:92%;
+			}
+			html.touch #scrollgrabber {
+				float:right;
+				width:4%;
+				margin-right:2%;
+				background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)
+			}
+			html.borderradius #scrollgrabber {
+				border-radius: 1em;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+		<div id="content">
+			<div id="signatureparent">
+				<div id="signature"></div>
+			</div>
+			<div id="tools">
+				<div><textarea id="base_64_format" style="width:50%;height:7em;"></textarea></div>
+			</div>
+			<button id="submit_sign">Submit</button>
+			<button id="reset_sign">Reset</button>
+			<div><p>Display Area:</p><div id="displayarea"></div></div>
+		</div>
+		<div id="scrollgrabber"></div>
+		</div>
+		<script src="libs/jquery.js"></script>
+		<script src="libs/jSignature.min.js"></script>
+		<script>
+		    $(document).ready(function() {
+		        $("#signature").jSignature({'UndoButton':true});
+		    });
+		    $("#submit_sign").click(function() {
+		    	var data = $("#signature").jSignature('getData', 'image');
+		    	$("#base_64_format").val(data.join(','));
+		    	$("#displayarea").html("");
+		    	var i = new Image();
+		    	i.src = 'data:' + data[0] + ',' + data[1];
+		    	$("#displayarea").html(i);
+		    });
+		    $("#reset_sign").click(function(){
+		    	$("#signature").jSignature('reset');
+		    });
+		    if (Modernizr.touch){
+		    	$('#scrollgrabber').height($('#content').height())		
+		    }
+		</script>
+	</body>
+</html>
